@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h> 																 
+
+struct Item
+{
+	char country[100];
+	int jpnum;
+	int ypnum;
+	int tpnum;
+	int totalnum;
+};
+
+typedef struct Item item;
+
+void printitem( item c)//输出函数 
+{
+	printf("%s\t%d\t%d\t%d\t%d\n",c.country,c.jpnum,c.ypnum,c.tpnum,c.totalnum);
+}
+	
+
+int main()
+{
+	item c[8];
+	FILE*fp=fopen("D:\\DFTK\\olympics.txt","r");
+	if(fp==NULL)
+	{
+		printf("error\n");
+	}
+	
+	
+	for(int i=0;i<8;i++)
+	{
+		fscanf(fp,"%s %d %d %d %d",&c[i].country,&c[i].jpnum,&c[i].ypnum,&c[i].tpnum,&c[i].totalnum);
+	}
+	fclose(fp);
+	
+	for(int i=0;i<8;i++)
+	{
+		printf("%s\t%d\t%d\t%d\t%d\n",c[i].country,c[i].jpnum,c[i].ypnum,c[i].tpnum,c[i].totalnum);
+	}
+	 
+	item max=c[0];
+	item min=c[0];
+	for(int i=1;i<8;i++)
+	{
+		if(c[i].totalnum>max.totalnum) max=c[i];
+		if(c[i].totalnum<min.totalnum) min=c[i];
+	}
+	printf("\n奖牌最多的国家信息\n");
+	printitem(max);
+	printf("\n奖牌最少的国家信息\n");
+	printitem(min);
+	
+	item b[8];
+	for(int i=0;i<8;i++)
+	{
+		item d=c[i];
+		b[i]=d;
+	}
+	int m=8;
+	for(int i=0;i<m;i++)
+	{
+		for(int j=0;j<m-1;j++)
+		{
+			if(b[j].totalnum>b[j+1].totalnum)
+			{
+				item t=b[j];
+				b[j]=b[j+1];
+				b[j+1]=t;
+			}
+		}
+	}
+	FILE* zp=fopen("D:\\DFTK\\final result.txt","w+");
+    FILE* kp=fopen("D:\\DFTK\\maxmin.txt","w+");
+	fprintf(zp,"国家\t金牌\t银牌\t铜牌\t总数\n");
+	for(int h=0;h<8;h++)
+	{
+		fprintf(zp,"%s\t%d\t%d\t%d\t%d\n",b[h].country,b[h].jpnum,b[h].ypnum,b[h].tpnum,b[h].totalnum);
+	}
+	fprintf(kp,"%s\t%d\t%d\t%d\t%d\n",max.country,max.jpnum,max.ypnum,max.tpnum,max.totalnum);
+	fprintf(kp,"%s\t%d\t%d\t%d\t%d\n",min.country,min.jpnum,min.ypnum,min.tpnum,min.totalnum);
+	fclose(zp);
+	fclose(kp);
+	return 0;
+ } 
